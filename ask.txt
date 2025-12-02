@@ -1,0 +1,83 @@
+Create a function `parse_env_vars(env_vars: Dict[str, str]) -> Dict[str, Any]` that:
+
+1. Converts flat environment variables to nested dictionaries
+ Use double underscore (`__`) as a separator for nesting levels
+Use single underscore (`_`) to split keys into parts
+ Convert all keys to lowercase
+
+2. Performs automatic type conversion
+ Convert string numbers to integers: `"5432"` → `5432`
+ Convert string floats to floats: `"3.14"` → `3.14`
+ Convert boolean strings to booleans:
+`"true"`, `"1"`, `"yes"`, `"on"` → `True`
+`"false"`, `"0"`, `"no"`, `"off"` → `False`
+ Keep other strings as-is
+
+Examples
+
+Example 1: Simple Nested Structure
+```python
+env_vars = {
+"APP_DB__HOST": "localhost",
+"APP_DB__PORT": "5432"
+}
+
+result = parse_env_vars(env_vars)
+Expected output:
+{
+"app": {
+"db": {
+"host": "localhost",
+"port": 5432 # Note: integer, not string
+}
+}
+}
+```
+
+Example 2: Mixed Nesting Levels
+```python
+env_vars = {
+"APP_NAME": "MyApp",
+"APP_DB__HOST": "localhost",
+"APP_DB__PORT": "5432",
+"APP_DEBUG": "true"
+}
+
+result = parse_env_vars(env_vars)
+Expected output:
+{
+"app": {
+"name": "MyApp",
+"db": {
+"host": "localhost",
+"port": 5432
+},
+"debug": True # Note: boolean, not string
+}
+}
+```
+
+Example 3: Deeply Nested Structure
+```python
+env_vars = {
+"APP_SERVICES__API__V1__ENDPOINT": "/api/v1",
+"APP_SERVICES__API__V2__ENDPOINT": "/api/v2"
+}
+
+result = parse_env_vars(env_vars)
+Expected output:
+{
+"app": {
+"services": {
+"api": {
+"v1": {
+"endpoint": "/api/v1"
+},
+"v2": {
+"endpoint": "/api/v2"
+}
+}
+}
+ }
+}
+```
